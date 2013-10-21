@@ -103,16 +103,16 @@ class PayPalPaymentsForm(forms.Form):
         return mark_safe(u"""<form action="%s" method="post">
     %s
     <input type="image" src="%s" border="0" name="submit" alt="Buy it Now" />
-</form>""" % (POSTBACK_ENDPOINT, self.as_p(), self.get_image()))
+</form>""" % (POSTBACK_ENDPOINT, self.as_p(), self.get_image(test=False)))
         
         
     def sandbox(self):
         return mark_safe(u"""<form action="%s" method="post">
     %s
     <input type="image" src="%s" border="0" name="submit" alt="Buy it Now" />
-</form>""" % (SANDBOX_POSTBACK_ENDPOINT, self.as_p(), self.get_image()))
+</form>""" % (SANDBOX_POSTBACK_ENDPOINT, self.as_p(), self.get_image(test=True)))
         
-    def get_image(self):
+    def get_image(self, test=True):
         return {
             (True, self.SUBSCRIBE): SUBSCRIPTION_SANDBOX_IMAGE,
             (True, self.BUY): SANDBOX_IMAGE,
@@ -120,7 +120,7 @@ class PayPalPaymentsForm(forms.Form):
             (False, self.SUBSCRIBE): SUBSCRIPTION_IMAGE,
             (False, self.BUY): IMAGE,
             (False, self.DONATE): DONATION_IMAGE,
-        }[TEST, self.button_type]
+        }[test, self.button_type]
 
     def is_transaction(self):
         return not self.is_subscription()
